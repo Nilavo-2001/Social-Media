@@ -4,7 +4,7 @@ const handleServerError = require("../utils/serverError")
 const getUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const curUser = await user.findById(id); // improve security
+        const curUser = await user.findById(id).populate('friends'); // improve security
         curUser.password = '';
         res.status(200).json(curUser);
     } catch (error) {
@@ -46,12 +46,18 @@ const addRemoveFriends = async (req, res) => {
         await curUser.save();
         await friend.save();
         let { friends } = await user.findById(id).populate('friends');
+        await friend.populate('friends');
         const formattedFriends = friends.map(
             ({ _id, firstName, lastName, occupation, location, picturePath }) => {
                 return { _id, firstName, lastName, occupation, location, picturePath };
             }
         );
-        res.status(200).json(formattedFriends);
+        const friend_formattedFriends = friend.friends.map(
+            ({ _id, firstName, lastName, occupation, location, picturePath }) => {
+                return { _id, firstName, lastName, occupation, location, picturePath };
+            }
+        );
+        res.status(200).json({ user: formattedFriends, friend: friend_formattedFriends });
     } catch (error) {
         handleServerError(res, error, 404);
     }

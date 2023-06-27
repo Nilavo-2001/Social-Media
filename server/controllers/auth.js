@@ -29,7 +29,7 @@ const registerUser = async (req, res) => {
 const logInUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const curUser = await user.findOne({ email });
+        const curUser = await user.findOne({ email }).populate('friends');
         if (!curUser) {
             return res.status(400).json({ msg: "No user with this email" });
         }

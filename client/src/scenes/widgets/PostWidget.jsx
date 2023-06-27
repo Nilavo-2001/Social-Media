@@ -4,7 +4,15 @@ import {
   FavoriteOutlined,
   ShareOutlined,
 } from "@mui/icons-material";
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Typography,
+  useTheme,
+  InputBase,
+  Button,
+} from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -22,9 +30,11 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  isProfile = false,
 }) => {
   console.log("Post-widget");
   const [isComments, setIsComments] = useState(false);
+  comments = ["123", "456"];
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
@@ -60,6 +70,7 @@ const PostWidget = ({
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
+        isProfile={isProfile}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
@@ -99,17 +110,61 @@ const PostWidget = ({
         </IconButton>
       </FlexBetween>
       {isComments && (
-        <Box mt="0.5rem">
-          {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`}>
-              <Divider />
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {comment}
-              </Typography>
-            </Box>
-          ))}
-          <Divider />
-        </Box>
+        <>
+          <FlexBetween gap="1.5rem">
+            <InputBase
+              placeholder="What's on your mind..."
+              // onChange={(e) => setPost(e.target.value)}
+              // value={post}
+              sx={{
+                width: "100%",
+                backgroundColor: palette.neutral.light,
+                borderRadius: "2rem",
+                padding: "1rem 2rem",
+              }}
+            />
+            <Button
+              // disabled={!post}
+              // onClick={handlePost}
+              sx={{
+                color: palette.background.alt,
+                backgroundColor: palette.primary.main,
+                borderRadius: "3rem",
+                "&:hover": { color: "black" },
+              }}
+            >
+              POST
+            </Button>
+          </FlexBetween>
+          <Box mt="0.5rem">
+            {comments.map((comment, i) => (
+              <Box key={`${name}-${i}`}>
+                <Divider />
+                <Typography
+                  sx={{
+                    color: main,
+                    m: "0.4rem 0",
+                    pl: "1rem",
+                    fontSize: "1.6rem",
+                  }}
+                >
+                  hello
+                </Typography>
+                <Typography
+                  sx={{
+                    color: main,
+                    m: "0.9rem 0",
+                    pl: "1rem",
+                    fontSize: "1rem",
+                  }}
+                >
+                  By User
+                </Typography>
+              </Box>
+            ))}
+            <Divider />
+          </Box>
+        </>
       )}
     </WidgetWrapper>
   );

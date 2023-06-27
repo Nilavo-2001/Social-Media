@@ -1,16 +1,18 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFriends } from "state";
+import { setFriends, setProfileUserFriends } from "state";
 
-const FriendListWidget = ({ userId }) => {
-  console.log("friendslist");
+const FriendListWidget = ({ userId, isProfile = false }) => {
+  console.log("friendslist from home ", isProfile);
   const dispatch = useDispatch();
   const { palette } = useTheme();
   const token = useSelector((state) => state.token);
-  const friends = useSelector((state) => state.user.friends);
+  let loggedInUserFriends = useSelector((state) => state.user.friends);
+  let profileUserFriends = useSelector((state) => state.profileUser.friends);
+  let finalFriends = isProfile ? profileUserFriends : loggedInUserFriends;
 
   const getFriends = async () => {
     const response = await fetch(
@@ -21,7 +23,12 @@ const FriendListWidget = ({ userId }) => {
       }
     );
     const data = await response.json();
-    dispatch(setFriends({ friends: data }));
+    console.log("friends - data", data);
+    if (isProfile) {
+      dispatch(setProfileUserFriends({ friends: data }));
+    } else {
+      dispatch(setFriends({ friends: data }));
+    }
   };
 
   useEffect(() => {
@@ -36,16 +43,17 @@ const FriendListWidget = ({ userId }) => {
         fontWeight="500"
         sx={{ mb: "1.5rem" }}
       >
-        Friend List
+        Connenctions
       </Typography>
       <Box display="flex" flexDirection="column" gap="1.5rem">
-        {friends.map((friend) => (
+        {finalFriends.map((friend) => (
           <Friend
             key={friend._id}
             friendId={friend._id}
             name={`${friend.firstName} ${friend.lastName}`}
             subtitle={friend.occupation}
             userPicturePath={friend.picturePath}
+            isProfile={isProfile}
           />
         ))}
       </Box>

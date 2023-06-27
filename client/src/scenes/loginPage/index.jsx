@@ -27,6 +27,7 @@ const LoginPage = () => {
         <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
           Welcome to Socipedia, the Social Media for Sociopaths!
         </Typography>
+        {/* combined form for both login and register , depending on the state */}
         <Form />
       </Box>
     </Box>

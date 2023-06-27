@@ -1,6 +1,7 @@
 import { Box, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setProfileUser } from "state";
 import { useParams } from "react-router-dom";
 import Navbar from "scenes/navbar";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
@@ -9,7 +10,8 @@ import UserWidget from "scenes/widgets/UserWidget";
 
 const ProfilePage = () => {
   console.log("profile-page called");
-  const [user, setUser] = useState(null);
+  const dipatch = useDispatch();
+  const user = useSelector((state) => state.profileUser);
   const { userId } = useParams();
   const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -21,8 +23,8 @@ const ProfilePage = () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
-    setUser(data);
-    console.log(user);
+    //console.log(data);
+    dipatch(setProfileUser({ user: data }));
   };
 
   useEffect(() => {
@@ -44,7 +46,7 @@ const ProfilePage = () => {
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
           <UserWidget userId={user._id} picturePath={user.picturePath} />
           <Box m="2rem 0" />
-          <FriendListWidget userId={user._id} />
+          <FriendListWidget userId={user._id} isProfile={true} />
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
