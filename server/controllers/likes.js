@@ -35,6 +35,7 @@ const toggleLike = async (req, res) => {
             await curPost.save();
             await curPost.populate('user', ['firstName', 'lastName', 'picturePath', 'location']);
             await curPost.populate('likes');
+            await curPost.populate('comments');
             res.status(200).json(curPost);
         }
         else if (type == 'comment') {

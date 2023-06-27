@@ -1,5 +1,5 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfileUser } from "state";
 import { useParams } from "react-router-dom";
@@ -23,9 +23,10 @@ const ProfilePage = () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
-    //console.log(data);
+    console.log(data);
     dipatch(setProfileUser({ user: data }));
   };
+  if (!user) getUser();
 
   useEffect(() => {
     getUser();

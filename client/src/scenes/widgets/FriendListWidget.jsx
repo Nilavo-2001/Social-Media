@@ -6,14 +6,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFriends, setProfileUserFriends } from "state";
 
 const FriendListWidget = ({ userId, isProfile = false }) => {
-  console.log("friendslist from home ", isProfile);
+  console.log("friendslist from profile", isProfile);
   const dispatch = useDispatch();
   const { palette } = useTheme();
   const token = useSelector((state) => state.token);
-  let loggedInUserFriends = useSelector((state) => state.user.friends);
-  let profileUserFriends = useSelector((state) => state.profileUser.friends);
+  let loggedInUserFriends = useSelector((state) => {
+    if (state.user) {
+      return state.user.friends;
+    } else {
+      return null;
+    }
+  });
+  let profileUserFriends = useSelector((state) => {
+    if (state.profileUser) {
+      return state.profileUser.friends;
+    } else {
+      return null;
+    }
+  });
   let finalFriends = isProfile ? profileUserFriends : loggedInUserFriends;
-
+  if (isProfile && !loggedInUserFriends) getFriends();
   const getFriends = async () => {
     const response = await fetch(
       `http://localhost:3001/users/${userId}/friends`,

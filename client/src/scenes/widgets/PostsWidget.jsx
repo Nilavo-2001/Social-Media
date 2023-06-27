@@ -41,21 +41,27 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 
   return (
     <>
-      {posts.map(({ _id, user, description, picturePath, likes, comments }) => (
-        <PostWidget
-          key={_id}
-          postId={_id}
-          postUserId={user._id}
-          name={`${user.firstName} ${user.lastName}`}
-          description={description}
-          location={user.location}
-          picturePath={picturePath}
-          userPicturePath={user.picturePath}
-          likes={likes}
-          comments={comments}
-          isProfile={isProfile}
-        />
-      ))}
+      {posts.length != 0 ? (
+        posts.map(
+          ({ _id, user, description, picturePath, likes, comments }) => (
+            <PostWidget
+              key={_id}
+              postId={_id}
+              postUserId={user._id}
+              name={`${user.firstName} ${user.lastName}`}
+              description={description}
+              location={user.location}
+              picturePath={picturePath}
+              userPicturePath={user.picturePath}
+              likes={likes}
+              comments={comments}
+              isProfile={isProfile}
+            />
+          )
+        )
+      ) : (
+        <h1>O posts form User</h1>
+      )}
     </>
   );
 };

@@ -16,6 +16,7 @@ import {
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
+import CommentsList from "components/CommentsList";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
@@ -34,7 +35,7 @@ const PostWidget = ({
 }) => {
   console.log("Post-widget");
   const [isComments, setIsComments] = useState(false);
-  comments = ["123", "456"];
+  const [comment, setComment] = useState("");
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
@@ -63,6 +64,18 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
   };
 
+  const handlePostComment = async () => {
+    const response = await fetch(`http://localhost:3001/comments/`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: comment, postId }),
+    });
+    const updatedPost = await response.json();
+    dispatch(setPost({ post: updatedPost }));
+  };
   return (
     <WidgetWrapper mb="2rem">
       <Friend
@@ -110,61 +123,14 @@ const PostWidget = ({
         </IconButton>
       </FlexBetween>
       {isComments && (
-        <>
-          <FlexBetween gap="1.5rem">
-            <InputBase
-              placeholder="What's on your mind..."
-              // onChange={(e) => setPost(e.target.value)}
-              // value={post}
-              sx={{
-                width: "100%",
-                backgroundColor: palette.neutral.light,
-                borderRadius: "2rem",
-                padding: "1rem 2rem",
-              }}
-            />
-            <Button
-              // disabled={!post}
-              // onClick={handlePost}
-              sx={{
-                color: palette.background.alt,
-                backgroundColor: palette.primary.main,
-                borderRadius: "3rem",
-                "&:hover": { color: "black" },
-              }}
-            >
-              POST
-            </Button>
-          </FlexBetween>
-          <Box mt="0.5rem">
-            {comments.map((comment, i) => (
-              <Box key={`${name}-${i}`}>
-                <Divider />
-                <Typography
-                  sx={{
-                    color: main,
-                    m: "0.4rem 0",
-                    pl: "1rem",
-                    fontSize: "1.6rem",
-                  }}
-                >
-                  hello
-                </Typography>
-                <Typography
-                  sx={{
-                    color: main,
-                    m: "0.9rem 0",
-                    pl: "1rem",
-                    fontSize: "1rem",
-                  }}
-                >
-                  By User
-                </Typography>
-              </Box>
-            ))}
-            <Divider />
-          </Box>
-        </>
+        <CommentsList
+          comments={comments}
+          name={name}
+          token={token}
+          postId={postId}
+          palette={palette}
+          main={main}
+        />
       )}
     </WidgetWrapper>
   );

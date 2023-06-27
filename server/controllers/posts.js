@@ -26,7 +26,7 @@ const createPost = async (req, res) => {
 /* READ */
 const getFeedPosts = async (req, res) => {
     try {
-        const allPosts = await post.find().populate('user', ['firstName', 'lastName', 'picturePath', 'location']).populate('likes');
+        const allPosts = await post.find().populate('user', ['firstName', 'lastName', 'picturePath', 'location']).populate('likes').populate('comments');
         return res.status(200).json(allPosts);
     } catch (err) {
         handleServerError(res, err, 404);
