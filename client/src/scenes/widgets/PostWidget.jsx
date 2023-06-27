@@ -23,6 +23,7 @@ const PostWidget = ({
   likes,
   comments,
 }) => {
+  console.log("Post-widget");
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
@@ -53,7 +54,7 @@ const PostWidget = ({
   };
 
   return (
-    <WidgetWrapper>
+    <WidgetWrapper mb="2rem">
       <Friend
         friendId={postUserId}
         name={name}

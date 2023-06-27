@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 
 const MyPostWidget = ({ picturePath }) => {
+  console.log("create post");
   //to create post
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false); // if image is uploaded
@@ -162,6 +163,7 @@ const MyPostWidget = ({ picturePath }) => {
             color: palette.background.alt,
             backgroundColor: palette.primary.main,
             borderRadius: "3rem",
+            "&:hover": { color: "black" },
           }}
         >
           POST

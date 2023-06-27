@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 
 const Navbar = () => {
+  console.log("Navbar");
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,7 +44,6 @@ const Navbar = () => {
   // };
   // const token = "test";
   const fullName = `${user.firstName} ${user.lastName}`;
-  const firstName = `${user.firstName}`;
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
       <FlexBetween gap="1.75rem">
