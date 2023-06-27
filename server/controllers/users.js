@@ -5,6 +5,7 @@ const getUser = async (req, res) => {
     try {
         const { id } = req.params;
         const curUser = await user.findById(id); // improve security
+        curUser.password = '';
         res.status(200).json(curUser);
     } catch (error) {
         handleServerError(res, error, 404);

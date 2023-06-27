@@ -9,11 +9,11 @@ const registerUser = async (req, res) => {
 
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
-
+        console.log(req.file);
         const newUser = new user({
             ...req.body,
             password: passwordHash,
-            picturePath: req.file.path, // unchecked
+            picturePath: req.file.filename,
             viewedProfile: Math.floor(Math.random() * 10000),
             impressions: Math.floor(Math.random() * 10000),
         });
