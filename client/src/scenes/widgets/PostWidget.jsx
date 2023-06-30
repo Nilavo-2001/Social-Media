@@ -3,6 +3,7 @@ import {
   FavoriteBorderOutlined,
   FavoriteOutlined,
   ShareOutlined,
+  DeleteOutline,
 } from "@mui/icons-material";
 import {
   Box,
@@ -19,7 +20,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import CommentsList from "components/CommentsList";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "state";
+import { setPost, setPosts } from "state";
 
 const PostWidget = ({
   postId,
@@ -35,7 +36,6 @@ const PostWidget = ({
 }) => {
   console.log("Post-widget");
   const [isComments, setIsComments] = useState(false);
-  const [comment, setComment] = useState("");
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
@@ -64,18 +64,6 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
   };
 
-  const handlePostComment = async () => {
-    const response = await fetch(`http://localhost:3001/comments/`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ content: comment, postId }),
-    });
-    const updatedPost = await response.json();
-    dispatch(setPost({ post: updatedPost }));
-  };
   return (
     <WidgetWrapper mb="2rem">
       <Friend
@@ -83,6 +71,7 @@ const PostWidget = ({
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
+        postId={postId}
         isProfile={isProfile}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>

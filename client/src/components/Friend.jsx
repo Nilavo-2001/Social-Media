@@ -1,12 +1,17 @@
-import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
+import {
+  PersonAddOutlined,
+  PersonRemoveOutlined,
+  DeleteOutline,
+} from "@mui/icons-material";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setFriends, setProfileUserFriends } from "state";
+import { setFriends, setProfileUserFriends, setPosts } from "state";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 
 const Friend = ({
+  postId,
   friendId,
   name,
   subtitle,
@@ -42,7 +47,18 @@ const Friend = ({
     dispatch(setFriends({ friends: data.user }));
     if (isProfile) dispatch(setProfileUserFriends({ friends: data.friend }));
   };
-
+  const handleDeletePost = async () => {
+    const response = await fetch(`http://localhost:3001/posts/`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ postId, isProfile }),
+    });
+    const data = await response.json();
+    dispatch(setPosts({ posts: data }));
+  };
   return (
     <FlexBetween>
       <FlexBetween gap="1rem">
@@ -70,7 +86,12 @@ const Friend = ({
           </Typography>
         </Box>
       </FlexBetween>
-      {!(_id == friendId) && (
+      {_id == friendId ? (
+        <DeleteOutline
+          onClick={() => handleDeletePost()}
+          sx={{ cursor: "pointer", fontSize: "1.5rem" }}
+        />
+      ) : (
         <IconButton
           onClick={() => patchFriend()}
           sx={{ backgroundColor: "#CBC3E3", p: "0.6rem" }}
